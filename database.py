@@ -1,4 +1,3 @@
-
 import sqlite3
 
 DB_NAME = "studymate.db"
