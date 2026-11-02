@@ -39,3 +39,38 @@ def get_subjects():
         ).fetchall()
 
     return rows
+
+
+def update_subject(subject_id, new_name):
+    new_name = new_name.strip()
+
+    if not new_name:
+        return False, "Please enter a subject name."
+
+    try:
+        with sqlite3.connect(DB_NAME) as conn:
+            cursor = conn.execute(
+                "UPDATE subjects SET name = ? WHERE id = ?",
+                (new_name, subject_id)
+            )
+
+            if cursor.rowcount == 0:
+                return False, "Subject not found."
+
+        return True, f"{new_name} updated successfully!"
+
+    except sqlite3.IntegrityError:
+        return False, f"{new_name} already exists!"
+
+
+def delete_subject(subject_id):
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.execute(
+            "DELETE FROM subjects WHERE id = ?",
+            (subject_id,)
+        )
+
+        if cursor.rowcount == 0:
+            return False, "Subject not found."
+
+    return True, "Subject deleted successfully!"
