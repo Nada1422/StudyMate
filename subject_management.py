@@ -18,19 +18,24 @@ def confirm_deletion(subject_id, code, name):
     col1, col2 = st.columns(2)
 
     with col1:
+
         if st.button(
             "Yes, Delete",
             type="primary",
             key=f"modal_del_{subject_id}"
         ):
+
             success, message = delete_subject(subject_id)
 
             if success:
+
                 st.session_state["toast_message"] = (
                     "info",
-                    "Subject deleted successfully!"
+                    message
                 )
+
             else:
+
                 st.session_state["toast_message"] = (
                     "error",
                     message
@@ -39,44 +44,51 @@ def confirm_deletion(subject_id, code, name):
             st.rerun()
 
     with col2:
+
         if st.button(
             "Cancel",
             key=f"modal_cancel_{subject_id}"
         ):
+
             st.rerun()
 
 
 @st.dialog("Confirm Deletion")
 def deletion_dialog(subject_id, code, name):
+
     confirm_deletion(subject_id, code, name)
 
 
 def show():
 
     # Persistent Notifications
+
     if "toast_message" in st.session_state:
 
         msg_type, msg_text = st.session_state["toast_message"]
 
         if msg_type == "success":
+
             st.success(msg_text)
 
         elif msg_type == "error":
+
             st.error(msg_text)
 
         elif msg_type == "warning":
+
             st.warning(msg_text)
 
         elif msg_type == "info":
+
             st.info(msg_text)
 
         del st.session_state["toast_message"]
 
-
     st.header("📖 Subject Management")
 
-
     # Add Subject
+
     st.subheader("➕ Add a Subject")
 
     with st.form("add_subject_form", clear_on_submit=True):
@@ -98,11 +110,14 @@ def show():
             success, message = add_subject(code, name)
 
             if success:
+
                 st.session_state["toast_message"] = (
                     "success",
                     message
                 )
+
             else:
+
                 st.session_state["toast_message"] = (
                     "warning",
                     message
@@ -110,11 +125,10 @@ def show():
 
             st.rerun()
 
-
     st.divider()
 
-
     # Display Subjects
+
     st.subheader("📚 My Subjects")
 
     subjects = get_subjects()
@@ -126,6 +140,7 @@ def show():
             col1, col2, col3 = st.columns([0.6, 0.2, 0.2])
 
             with col1:
+
                 st.write(f"📘 **{code}** - {name}")
 
             with col2:
@@ -157,18 +172,20 @@ def show():
                             )
 
                             if success:
+
                                 st.session_state["toast_message"] = (
                                     "success",
                                     message
                                 )
+
                             else:
+
                                 st.session_state["toast_message"] = (
                                     "error",
                                     message
                                 )
 
                             st.rerun()
-
 
             with col3:
 
