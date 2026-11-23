@@ -1,3 +1,4 @@
+
 import sqlite3
 
 DB_NAME = "studymate.db"
@@ -8,64 +9,82 @@ def init_db():
         conn.execute("""
             CREATE TABLE IF NOT EXISTS subjects (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                code TEXT NOT NULL UNIQUE,
                 name TEXT NOT NULL UNIQUE
             )
         """)
 
 
-def add_subject(name):
+def add_subject(code, name):
+    code = code.strip().upper()
     name = name.strip()
 
-    if not name:
-        return False, "Please enter a subject."
+    if not code or not name:
+        return False, "Please enter both subject code and name."
 
     try:
         with sqlite3.connect(DB_NAME) as conn:
             conn.execute(
-                "INSERT INTO subjects (name) VALUES (?)",
-                (name,)
+                """
+                INSERT INTO subjects (code, name)
+                VALUES (?, ?)
+                """,
+                (code, name)
             )
-        return True, f"{name} added successfully!"
+
+        return True, f"{code} - {name} added successfully!"
 
     except sqlite3.IntegrityError:
-        return False, f"{name} already exists!"
+        return False, "Subject code or name already exists!"
 
 
 def get_subjects():
     with sqlite3.connect(DB_NAME) as conn:
         rows = conn.execute(
-            "SELECT id, name FROM subjects ORDER BY name"
+            """
+            SELECT id, code, name
+            FROM subjects
+            ORDER BY code
+            """
         ).fetchall()
 
     return rows
 
 
-def update_subject(subject_id, new_name):
-    new_name = new_name.strip()
+def update_subject(subject_id, code, name):
+    code = code.strip().upper()
+    name = name.strip()
 
-    if not new_name:
-        return False, "Please enter a subject name."
+    if not code or not name:
+        return False, "Please enter both subject code and name."
 
     try:
         with sqlite3.connect(DB_NAME) as conn:
             cursor = conn.execute(
-                "UPDATE subjects SET name = ? WHERE id = ?",
-                (new_name, subject_id)
+                """
+                UPDATE subjects
+                SET code = ?, name = ?
+                WHERE id = ?
+                """,
+                (code, name, subject_id)
             )
 
             if cursor.rowcount == 0:
                 return False, "Subject not found."
 
-        return True, f"{new_name} updated successfully!"
+        return True, "Subject updated successfully!"
 
     except sqlite3.IntegrityError:
-        return False, f"{new_name} already exists!"
+        return False, "Subject code or name already exists!"
 
 
 def delete_subject(subject_id):
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.execute(
-            "DELETE FROM subjects WHERE id = ?",
+            """
+            DELETE FROM subjects
+            WHERE id = ?
+            """,
             (subject_id,)
         )
 
