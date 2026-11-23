@@ -1,7 +1,10 @@
 
 import streamlit as st
+
 from database import init_db
 import subject_management
+import task_management
+
 
 st.set_page_config(
     page_title="StudyMate",
@@ -16,13 +19,23 @@ st.subheader("Your personal study planner")
 
 page = st.sidebar.selectbox(
     "Navigation",
-    ["Home", "Subject Management"]
+    [
+        "Home",
+        "Subject Management",
+        "Task Management"
+    ]
 )
 
 if page == "Home":
+
     st.write(
         "Organize your subjects and track your progress."
     )
 
 elif page == "Subject Management":
+
     subject_management.show()
+
+elif page == "Task Management":
+
+    task_management.show()
