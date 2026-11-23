@@ -1,4 +1,7 @@
+
 import streamlit as st
+from database import init_db
+import subject_management
 
 st.set_page_config(
     page_title="StudyMate",
@@ -6,18 +9,20 @@ st.set_page_config(
     layout="wide"
 )
 
+init_db()
+
 st.title("📚 StudyMate")
 st.subheader("Your personal study planner")
 
-st.write(
-    "Welcome! Let's organize your studies "
-    "and track your progress."
+page = st.sidebar.selectbox(
+    "Navigation",
+    ["Home", "Subject Management"]
 )
 
-subject = st.text_input("Enter a subject")
+if page == "Home":
+    st.write(
+        "Organize your subjects and track your progress."
+    )
 
-if st.button("Add Subject"):
-    if subject.strip():
-        st.success(f"{subject} added successfully!")
-    else:
-        st.warning("Please enter a subject.")
+elif page == "Subject Management":
+    subject_management.show()
