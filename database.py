@@ -244,11 +244,15 @@ def update_task(
     title = title.strip()
     description = description.strip()
 
+  
     if not title:
-
         return False, "Task title is required."
 
+    if not deadline:
+        return False, "Deadline is required."
+
     try:
+
 
         with get_connection() as conn:
 
