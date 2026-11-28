@@ -4,6 +4,7 @@ name: Python Tests
 on:
   push:
     branches:
+      - feature/database
       - feature/notifications
   pull_request:
     branches:

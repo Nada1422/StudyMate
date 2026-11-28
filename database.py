@@ -1,16 +1,20 @@
 
 import sqlite3
+from contextlib import contextmanager
 
 DB_NAME = "studymate.db"
 
 
+@contextmanager
 def get_connection():
-
     conn = sqlite3.connect(DB_NAME)
+    try:
+        conn.execute("PRAGMA foreign_keys = ON")
+        with conn:
+            yield conn
+    finally:
+        conn.close()
 
-    conn.execute("PRAGMA foreign_keys = ON")
-
-    return conn
 
 
 def init_db():
@@ -244,11 +248,15 @@ def update_task(
     title = title.strip()
     description = description.strip()
 
+  
     if not title:
-
         return False, "Task title is required."
 
+    if not deadline:
+        return False, "Deadline is required."
+
     try:
+
 
         with get_connection() as conn:
 
