@@ -14,28 +14,32 @@ def calculate_progress(tasks):
     return progress
 
 
-tasks = []
+def run_cli():
+    tasks = []
 
-number = int(input("Enter number of tasks: "))
+    number = int(input("Enter number of tasks: "))
 
-for i in range(number):
-    print("\nTask", i + 1)
+    for i in range(number):
+        print("\nTask", i + 1)
 
-    name = input("Enter task name: ")
-    status = input("Enter status (Completed/Not Completed): ")
+        name = input("Enter task name: ")
+        status = input("Enter status (Completed/Not Completed): ")
 
-    tasks.append({
-        "name": name,
-        "status": status
-    })
+        tasks.append({
+            "name": name,
+            "status": status
+        })
+
+    print("\nStudy Progress")
+    print("----------------")
+
+    for task in tasks:
+        print(task["name"], "-", task["status"])
+
+    progress = calculate_progress(tasks)
+
+    print("\nCompleted Progress:", progress, "%")
 
 
-print("\nStudy Progress")
-print("----------------")
-
-for task in tasks:
-    print(task["name"], "-", task["status"])
-
-progress = calculate_progress(tasks)
-
-print("\nCompleted Progress:", progress, "%")
+if __name__ == "__main__":
+    run_cli()
